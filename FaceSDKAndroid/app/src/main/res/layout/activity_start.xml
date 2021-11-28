@@ -8,15 +8,15 @@
     tools:context="com.baidu.idl.face.main.activity.start.StartActivity">
 
     <TextView
-        android:layout_marginBottom="@dimen/start_10"
-        android:layout_above="@+id/start_offTv"
         android:id="@+id/start_titleTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/start_offTv"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/start_10"
         android:text="@string/string_baidu"
         android:textColor="@color/blue"
-        android:textSize="@dimen/start_title"/>
+        android:textSize="@dimen/start_title" />
     <TextView
         android:textSize="@dimen/bottom_font"
         android:id="@+id/start_offTv"

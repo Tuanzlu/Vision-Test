@@ -238,11 +238,14 @@ public class FaceRGBAttendanceActivity extends BaseActivity implements View.OnCl
     }
 
     private void startTestOpenDebugRegisterFunction() {
-        // TODO ： 临时放置
-        //  CameraPreviewManager.getInstance().setCameraFacing(CameraPreviewManager.CAMERA_USB);
 //        if (SingleBaseConfig.getBaseConfig().getRBGCameraId() != -1){
+//            System.out.println("here nononoono false camera");
+//
+//            System.out.println("getRBGCameraId: ");
+//            System.out.println(SingleBaseConfig.getBaseConfig().getRBGCameraId());
 //            CameraPreviewManager.getInstance().setCameraFacing(SingleBaseConfig.getBaseConfig().getRBGCameraId());
 //        }else {
+//            System.out.println("here set the front camera");
 //            CameraPreviewManager.getInstance().setCameraFacing(CameraPreviewManager.CAMERA_FACING_FRONT);
 //        }
       CameraPreviewManager.getInstance().setCameraFacing(CameraPreviewManager.CAMERA_FACING_FRONT);
@@ -309,6 +312,8 @@ public class FaceRGBAttendanceActivity extends BaseActivity implements View.OnCl
                     userNameLayout.setVisibility(View.VISIBLE);
                     String absolutePath = FileUtils.getBatchImportSuccessDirectory()
                             + "/" + user.getImageName();
+                    System.out.println("image file : ");
+                    System.out.println(absolutePath);
                     Bitmap bitmap = BitmapFactory.decodeFile(absolutePath);
                     nameImage.setImageBitmap(bitmap);
                     nameText.setTextColor(Color.parseColor("#00BAF2"));

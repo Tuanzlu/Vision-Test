@@ -204,15 +204,16 @@ public class FaceRegisterNewActivity extends BaseActivity implements View.OnClic
      */
     private void startCameraPreview() {
         // 设置前置摄像头
-        if (SingleBaseConfig.getBaseConfig().getRBGCameraId() != -1){
-            CameraPreviewManager.getInstance().setCameraFacing(SingleBaseConfig.getBaseConfig().getRBGCameraId());
-        }else {
-            CameraPreviewManager.getInstance().setCameraFacing(CameraPreviewManager.CAMERA_FACING_FRONT);
-        }
+//        if (SingleBaseConfig.getBaseConfig().getRBGCameraId() != -1){
+//            CameraPreviewManager.getInstance().setCameraFacing(SingleBaseConfig.getBaseConfig().getRBGCameraId());
+//        }else {
+//            CameraPreviewManager.getInstance().setCameraFacing(CameraPreviewManager.CAMERA_FACING_FRONT);
+//        }
         // 设置后置摄像头
         // CameraPreviewManager.getInstance().setCameraFacing(CameraPreviewManager.CAMERA_FACING_BACK);
         // 设置USB摄像头
         // CameraPreviewManager.getInstance().setCameraFacing(CameraPreviewManager.CAMERA_USB);
+        CameraPreviewManager.getInstance().setCameraFacing(CameraPreviewManager.CAMERA_FACING_FRONT);
 
         CameraPreviewManager.getInstance().startPreview(this, mAutoTexturePreviewView,
                 PREFER_WIDTH, PERFER_HEIGHT, new CameraDataCallback() {
@@ -511,6 +512,9 @@ public class FaceRegisterNewActivity extends BaseActivity implements View.OnClic
                 File faceDir = FileUtils.getBatchImportSuccessDirectory();
                 File file = new File(faceDir, imageName);
                 FileUtils.saveBitmap(file, mCropBitmap);
+                System.out.println("save Bitmap succeeded");
+                System.out.println(mCropBitmap);
+
                 // 数据变化，更新内存
                 FaceApi.getInstance().initDatabases(true);
                 // 更新UI

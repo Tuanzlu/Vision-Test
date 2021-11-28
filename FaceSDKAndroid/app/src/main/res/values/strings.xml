@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BaiDuFace Demo</string>
+    <string name="app_name">VisionTest Demo</string>
 
     <string name="face_setting">设置</string>
     <string name="face_id">设备ID</string>
@@ -109,12 +109,10 @@
     <string name="cw_cameradisplay">根据镜头或者使用设备差异，可能存在 RGB/NIR/Depth 图像帧镜像的问题，可通过以下设置进行调节。常见于镜头前置后置切换。</string>
 
     <string name="popup_success">激活成功</string>
-    <string name="home_title">Vision Test Demo</string>
-    <string name="home_gate">闸机模式</string>
+    <string name="home_title">VisionTest Demo</string>
     <string name="home_firstrun_regitst">首次使用请先进行人脸注册</string>
-    <string name="home_gate_english">GATE MODE</string>
-    <string name="home_check">考勤模式</string>
-    <string name="home_check_english">ATTENDANCE MODE</string>
+    <string name="home_check">开始检测</string>
+    <string name="home_check_english">Start Face Detection</string>
 
     <string name="home_face">人脸注册</string>
     <string name="home_faceLibrary">人脸库管理</string>
@@ -127,7 +125,7 @@
     <string name="testimony_tips_please_fail">请上传正面人脸照片</string>
     <string name="testimony_tips_success">上传图片不包含人脸</string>
     <string name="testimony_tips_please_success">无法进行人证比对</string>
-    <string name="string_baidu">百度人脸离线识别SDK</string>
+    <string name="string_baidu">VisionTest Demo</string>
     <string name="accredit_off">离线激活</string>
     <string name="off_technological_process">离线激活流程: </string>
     <string name="off_technological_process_one">购买激活序列号</string>

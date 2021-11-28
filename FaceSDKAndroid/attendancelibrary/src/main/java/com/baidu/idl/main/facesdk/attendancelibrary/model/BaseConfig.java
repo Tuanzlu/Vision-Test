@@ -16,13 +16,13 @@ public class BaseConfig {
     // 默认为false。可选项为"true"、"false"，是否开启调试显示，将会作用到所有视频流识别页面，包含1：N、1：1采集人脸图片环节。
     private boolean debug = false;
     // 默认为0。可传入0、90、180、270四个选项。
-    private int videoDirection = 0;
+    private int videoDirection = 90;
     // 默认为wireframe。可选项为"wireframe"、"fixedarea"，如选择fixed_area，需要传入半径，px像素为单位
     private String detectFrame = "wireframe";
     // 当选择fixed_area，需要传入半径信息，以px为单位，如50px
 //    private int radius = 50;
     // 默认为0。可传入0、90、180、270四个选项
-    private int detectDirection = 0;
+    private int detectDirection = 270;
     // 默认为max。分为"max" 、"none"三个方式，分别是最大人脸 ，和不检测人脸
     private String trackType = "max";
     // 默认为80px。可传入大于50px的数值，小于此大小的人脸不予检测
@@ -171,10 +171,10 @@ public class BaseConfig {
     // 最优人脸分数
     private int bestImageScore = 30;
     // 默认为0。可传入0、90、180、270四个选项。
-    private int rgbVideoDirection = 0;
+    private int rgbVideoDirection = 90;
 
     // 默认为0。可传入0、90、180、270四个选项。
-    private int nirVideoDirection = 0;
+    private int nirVideoDirection = 90;
 
     // 0：RGB无镜像，1：有镜像
     private int mirrorVideoRGB = 0;
@@ -183,10 +183,10 @@ public class BaseConfig {
     private int mirrorVideoNIR = 0;
 
     // rbg人脸检测角度 默认为0。可传入0、90、180、270四个选项。
-    private int rgbDetectDirection = 0;
+    private int rgbDetectDirection = 270;
 
     // nir人脸检测角度 默认为0。可传入0、90、180、270四个选项。
-    private int nirDetectDirection = 0;
+    private int nirDetectDirection = 90;
 
     // rbg人脸检测 0：RGB无镜像，1：有镜像
     private int mirrorDetectRGB = 0;

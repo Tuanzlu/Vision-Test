@@ -150,6 +150,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
             return;
         }
         int mCameraNum = Camera.getNumberOfCameras();
+        System.out.println("CameraNum: " + String.valueOf(mCameraNum));
         if (mCameraNum > 1){
             try {
                 mCamera = new Camera[mCameraNum];
@@ -187,53 +188,42 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
             }catch (Exception e){
                 e.printStackTrace();
             }
+
+            System.out.println(mCamera.toString());
         } else {
+            System.out.println("setRgbCameraId 0");
             setRgbCameraId(0);
         }
     }
 
     private void setRgbCameraId(int index){
+        System.out.println("setCameraId: " + String.valueOf(index));
         SingleBaseConfig.getBaseConfig().setRBGCameraId(index);
         com.baidu.idl.main.facesdk.attendancelibrary.model.SingleBaseConfig.getBaseConfig().setRBGCameraId(index);
-        com.baidu.idl.face.main.finance.model.SingleBaseConfig.getBaseConfig().setRBGCameraId(index);
-        com.baidu.idl.face.main.attribute.model.SingleBaseConfig.getBaseConfig().setRBGCameraId(index);
-        com.baidu.idl.face.main.drivermonitor.model.SingleBaseConfig.getBaseConfig().setRBGCameraId(index);
-        com.baidu.idl.main.facesdk.gazelibrary.model.SingleBaseConfig.getBaseConfig().setRBGCameraId(index);
-        com.baidu.idl.main.facesdk.paymentlibrary.model.SingleBaseConfig.getBaseConfig().setRBGCameraId(index);
-        com.baidu.idl.main.facesdk.identifylibrary.model.SingleBaseConfig.getBaseConfig().setRBGCameraId(index);
         com.baidu.idl.main.facesdk.registerlibrary.user.model.SingleBaseConfig.getBaseConfig().setRBGCameraId(index);
 
         AttendanceConfigUtils.modityJson();
-        AttributeConfigUtils.modityJson();
-        DriverMonitorConfigUtils.modityJson();
-        FinanceConfigUtils.modityJson();
-        GateConfigUtils.modityJson();
-        GazeConfigUtils.modityJson();
-        IdentifyConfigUtils.modityJson();
-        PaymentConfigUtils.modityJson();
         RegisterConfigUtils.modityJson();
 
     }
     private boolean isSetCameraId(){
+
         if (SingleBaseConfig.getBaseConfig().getRBGCameraId() == -1 ||
                 com.baidu.idl.main.facesdk.attendancelibrary.
                         model.SingleBaseConfig.getBaseConfig().getRBGCameraId() == -1 ||
-                com.baidu.idl.face.main.finance.model.
-                        SingleBaseConfig.getBaseConfig().getRBGCameraId() == -1 ||
-                com.baidu.idl.face.main.attribute.model.
-                        SingleBaseConfig.getBaseConfig().getRBGCameraId() == -1 ||
-                com.baidu.idl.face.main.drivermonitor.model.
-                        SingleBaseConfig.getBaseConfig().getRBGCameraId() == -1 ||
-                com.baidu.idl.main.facesdk.gazelibrary.model.
-                        SingleBaseConfig.getBaseConfig().getRBGCameraId() == -1 ||
-                com.baidu.idl.main.facesdk.paymentlibrary.model.
-                        SingleBaseConfig.getBaseConfig().getRBGCameraId() == -1 ||
-                com.baidu.idl.main.facesdk.identifylibrary.model.
-                        SingleBaseConfig.getBaseConfig().getRBGCameraId() == -1 ||
                 com.baidu.idl.main.facesdk.registerlibrary.user.model.
                         SingleBaseConfig.getBaseConfig().getRBGCameraId() == -1){
+
+
+            System.out.println("isSetCameraId : false");
+
             return false;
         }else {
+            System.out.println("isSetCameraId : true");
+            System.out.println("SingleBaseConfig:");
+            System.out.println(SingleBaseConfig.getBaseConfig().getRBGCameraId());
+            System.out.println("mCamera: ");
+            System.out.println(mCamera);
             return true;
         }
     }
@@ -328,8 +318,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         home_settingImg.setOnClickListener(this);
         home_menuImg = findViewById(R.id.home_menuImg);
         home_menuImg.setOnClickListener(this);
-        RelativeLayout home_gateRl = findViewById(R.id.home_gateRl);
-        home_gateRl.setOnClickListener(this);
         RelativeLayout home_checkRl = findViewById(R.id.home_checkRl);
         home_checkRl.setOnClickListener(this);
         ImageView home_faceTv = findViewById(R.id.home_faceTv);
@@ -365,15 +353,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
             case R.id.relative_manager: // 人脸库管理
                 dismissPopupWindow();
                 startActivity(new Intent(HomeActivity.this, UserManagerActivity.class));
-                break;
-            case R.id.home_gateRl:
-                mLiveType = com.baidu.idl.main.facesdk.model.SingleBaseConfig.getBaseConfig().getType();
-                // 闸机模块
-                judgeLiveType(mLiveType,
-                        FaceRGBGateActivity.class,
-                        FaceNIRGateActivriy.class,
-                        FaceDepthGateActivity.class,
-                        FaceRgbNirDepthGataActivity.class);
                 break;
             case R.id.home_checkRl:
                 mLiveType = com.baidu.idl.main.facesdk.attendancelibrary.model.SingleBaseConfig.getBaseConfig().getType();
