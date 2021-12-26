@@ -11,6 +11,10 @@ import android.graphics.PorterDuff;
 import android.graphics.RectF;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.TextUtils;
+import android.util.Base64;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.TextureView;
 import android.view.View;
@@ -43,14 +47,29 @@ import com.baidu.idl.main.facesdk.attendancelibrary.utils.ToastUtils;
 import com.baidu.idl.main.facesdk.attendancelibrary.view.CircleImageView;
 import com.baidu.idl.main.facesdk.model.BDFaceImageInstance;
 
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Date;
 
+
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import com.baidu.idl.main.facesdk.attendancelibrary.utils.HttpUtil;
+import com.baidu.idl.main.facesdk.attendancelibrary.utils.GsonUtils;
+
+import java.util.*;
 
 public class FaceRGBAttendanceActivity extends BaseActivity implements View.OnClickListener {
 
     // 图片越大，性能消耗越大，也可以选择640*480， 1280*720
     private static final int PREFER_WIDTH = SingleBaseConfig.getBaseConfig().getRgbAndNirWidth();
     private static final int PERFER_HEIGH = SingleBaseConfig.getBaseConfig().getRgbAndNirHeight();
+    private static String access_token;
     private Context mContext;
 
     private TextureView mDrawDetectFaceView;
@@ -62,6 +81,10 @@ public class FaceRGBAttendanceActivity extends BaseActivity implements View.OnCl
     private TextView mTvFeature;
     private TextView mTvAll;
     private TextView mTvAllTime;
+
+
+
+
 
     private RectF rectF;
     private Paint paint;
@@ -92,6 +115,7 @@ public class FaceRGBAttendanceActivity extends BaseActivity implements View.OnCl
     private RelativeLayout layoutCompareStatus;
     private TextView textCompareStatus;
     private User mUser;
+    private int flag = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +125,7 @@ public class FaceRGBAttendanceActivity extends BaseActivity implements View.OnCl
         FaceSDKManager.getInstance().initDataBases(this);
         setContentView(R.layout.activity_face_rgb_attendancelibrary);
         initView();
+
         // 屏幕的宽
         int displayWidth = DensityUtils.getDisplayWidth(mContext);
         // 屏幕的高
@@ -117,6 +142,7 @@ public class FaceRGBAttendanceActivity extends BaseActivity implements View.OnCl
             params.gravity = Gravity.CENTER;
             relativeLayout.setLayoutParams(params);
         }
+        getAccessToken();
     }
 
     private void initListener() {
@@ -262,8 +288,17 @@ public class FaceRGBAttendanceActivity extends BaseActivity implements View.OnCl
                                         // 预览模式
                                         checkCloseDebugResult(livenessModel);
 
-                                        // 开发模式
-                                        checkOpenDebugResult(livenessModel);
+                                        if (flag == 0) {
+                                            System.out.println("havent succeeded");
+
+                                            // 开发模式
+                                            checkOpenDebugResult(livenessModel);
+
+                                        }else if (flag == 1) {
+                                            System.out.println("have already succeeded");
+
+                                        }
+
                                     }
 
                                     @Override
@@ -280,6 +315,35 @@ public class FaceRGBAttendanceActivity extends BaseActivity implements View.OnCl
                                 });
                     }
                 });
+    }
+    public static String bitmapToBase64(Bitmap bitmap) {
+
+        String result = null;
+        ByteArrayOutputStream baos = null;
+        try {
+            if (bitmap != null) {
+                baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+
+                baos.flush();
+                baos.close();
+
+                byte[] bitmapBytes = baos.toByteArray();
+                result = Base64.encodeToString(bitmapBytes, Base64.DEFAULT);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (baos != null) {
+                    baos.flush();
+                    baos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
     }
 
     // ***************预览模式结果输出*************
@@ -312,15 +376,26 @@ public class FaceRGBAttendanceActivity extends BaseActivity implements View.OnCl
                     userNameLayout.setVisibility(View.VISIBLE);
                     String absolutePath = FileUtils.getBatchImportSuccessDirectory()
                             + "/" + user.getImageName();
-                    System.out.println("image file : ");
-                    System.out.println(absolutePath);
                     Bitmap bitmap = BitmapFactory.decodeFile(absolutePath);
+//                    String result = "";
                     nameImage.setImageBitmap(bitmap);
                     nameText.setTextColor(Color.parseColor("#00BAF2"));
                     nameText.setText(user.getUserName() + " 考勤成功");
                     attendanceTimeText.setText("考勤时间：" + TimeUtils.getTimeShort(date));
-                }
 
+//                    BDFaceImageInstance image = livenessModel.getBdFaceImageInstance();
+//                    if (image != null) {
+//                        result = bitmapToBase64(BitmapUtils.getInstaceBmp(image));
+//                        System.out.print("base64 result: " + result);
+////                        image.destory();
+//                    }
+//                    System.out.println("ready to start imageTest");
+//                    Intent imgIntent = new Intent(FaceRGBAttendanceActivity.this, ImageTestActivity.class);
+//                    imgIntent.putExtra("result", result);
+//                    imgIntent.putExtra("access_token", access_token);
+//                    startActivity(imgIntent);
+//                    finish();
+                }
             }
         });
     }
@@ -344,10 +419,12 @@ public class FaceRGBAttendanceActivity extends BaseActivity implements View.OnCl
                     mTvAllTime.setText(String.format("总耗时 ：%s ms", 0));
                     return;
                 }
-
+                String result = "";
                 BDFaceImageInstance image = livenessModel.getBdFaceImageInstance();
                 if (image != null) {
                     mFaceDetectImageView.setImageBitmap(BitmapUtils.getInstaceBmp(image));
+                    result = bitmapToBase64(BitmapUtils.getInstaceBmp(image));
+                    System.out.println("result from base64:" + result);
                     image.destory();
                 }
                 if (mLiveType == 0) {
@@ -365,6 +442,8 @@ public class FaceRGBAttendanceActivity extends BaseActivity implements View.OnCl
                             layoutCompareStatus.setVisibility(View.VISIBLE);
                             textCompareStatus.setTextColor(Color.parseColor("#00BAF2"));
                             textCompareStatus.setText("识别通过");
+                            System.out.println("识别通过了 哦耶 there");
+
                         }
                     }
 
@@ -401,6 +480,16 @@ public class FaceRGBAttendanceActivity extends BaseActivity implements View.OnCl
                                 layoutCompareStatus.setVisibility(View.VISIBLE);
                                 textCompareStatus.setTextColor(Color.parseColor("#00BAF2"));
                                 textCompareStatus.setText("识别通过");
+                                System.out.println("识别通过了 哦耶 here");
+                                System.out.print("base64 result: " + result);
+                                System.out.println("ready to start imageTest");
+                                Intent imgIntent = new Intent(mContext, ImageTestActivity.class);
+                                imgIntent.putExtra("result", result);
+                                imgIntent.putExtra("access_token", access_token);
+                                startActivity(imgIntent);
+                                flag = 1;
+                                System.out.println("test whether startactivity succeeded");
+                                finish();
                             }
                         }
                     }
@@ -507,6 +596,106 @@ public class FaceRGBAttendanceActivity extends BaseActivity implements View.OnCl
             }
         });
     }
+
+    public static void getAccessToken() {
+        System.out.println("here start getAccessToken");
+        String ak = "Mu8HELp2MU7cnXW4MwHE1Ulq";
+        String sk = "nM5ZQfqRaBNo82RzbcZXprHK3Pjhik2l";
+        // 获取token地址
+        String authHost = "https://aip.baidubce.com/oauth/2.0/token?";
+        final String getAccessTokenUrl = authHost
+                // 1. grant_type为固定参数
+                + "grant_type=client_credentials"
+                // 2. 官网获取的 API Key
+                + "&client_id=" + ak
+                // 3. 官网获取的 Secret Key
+                + "&client_secret=" + sk;
+        System.out.println("here start a new thread");
+
+        new Thread(new Runnable(){
+            @Override
+            public void run() {
+            try {
+                URL realUrl = new URL(getAccessTokenUrl);
+                // 打开和URL之间的连接
+                HttpURLConnection connection = (HttpURLConnection) realUrl.openConnection();
+                connection.setRequestMethod("GET");
+                connection.connect();
+                // 获取所有响应头字段
+                Map<String, List<String>> map = connection.getHeaderFields();
+                // 遍历所有的响应头字段
+                for (String key : map.keySet()) {
+                    System.err.println(key + "--->" + map.get(key));
+                }
+                // 定义 BufferedReader输入流来读取URL的响应
+                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String result = "";
+                String line;
+                while ((line = in.readLine()) != null) {
+                    result += line;
+                }
+                /**
+                 * 返回结果示例
+                 */
+                System.err.println("result:" + result);
+                JSONObject jsonObject = new JSONObject(result);
+                access_token = jsonObject.getString("access_token");
+                System.out.println("access_token:" + access_token);
+            } catch (Exception e) {
+                System.err.printf("获取token失败！");
+                e.printStackTrace(System.err);
+            }
+
+            }
+        }).start();
+    }
+
+//    public static void getLandMarks(String imgStr) {
+//        System.out.println("here start getLandMarks");
+//        // 获取token地址
+//        String authHost = "https://aip.baidubce.com/rest/2.0/face/v3/detect";
+//
+//        System.out.println("here start a new thread");
+//
+//        new Thread(new Runnable(){
+//            @Override
+//            public void run() {
+//                try {
+//                    URL realUrl = new URL(getAccessTokenUrl);
+//                    // 打开和URL之间的连接
+//                    HttpURLConnection connection = (HttpURLConnection) realUrl.openConnection();
+//                    connection.setRequestMethod("POST");
+//                    connection.connect();
+//                    // 获取所有响应头字段
+//                    Map<String, List<String>> map = connection.getHeaderFields();
+//                    // 遍历所有的响应头字段
+//                    for (String key : map.keySet()) {
+//                        System.err.println(key + "--->" + map.get(key));
+//                    }
+//                    // 定义 BufferedReader输入流来读取URL的响应
+//                    BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+//                    String result = "";
+//                    String line;
+//                    while ((line = in.readLine()) != null) {
+//                        result += line;
+//                    }
+//                    /**
+//                     * 返回结果示例
+//                     */
+//                    System.err.println("result:" + result);
+//                    JSONObject jsonObject = new JSONObject(result);
+//                    access_token = jsonObject.getString("access_token");
+//                    System.out.println("access_token:" + access_token);
+//                } catch (Exception e) {
+//                    System.err.printf("获取token失败！");
+//                    e.printStackTrace(System.err);
+//                }
+//
+//            }
+//        }).start();
+//    }
+
+
 
     @Override
     protected void onDestroy() {

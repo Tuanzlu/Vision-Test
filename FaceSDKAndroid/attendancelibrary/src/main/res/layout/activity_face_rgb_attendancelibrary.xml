@@ -31,8 +31,8 @@
         android:layout_width="110dp"
         android:layout_height="83dp"
         android:layout_above="@+id/kaifa_relativeLayout"
-        android:layout_marginBottom="5dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginBottom="5dp"
         android:background="@drawable/gate_imageview_radius"
         android:src="@mipmap/ic_image_video"
         android:visibility="visible" />

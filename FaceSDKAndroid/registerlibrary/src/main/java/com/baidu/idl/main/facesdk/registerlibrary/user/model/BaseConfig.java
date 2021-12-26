@@ -43,9 +43,9 @@ public class BaseConfig {
     // 遮挡阈值
     private float occlusion = 0.6f;
     // 左眼被遮挡的阈值，默认0.6
-    private float leftEye = 0.6f;
+    private float leftEye = 0f;
     // 右眼被遮挡的阈值，默认0.6
-    private float rightEye = 0.6f;
+    private float rightEye = 0f;
     // 鼻子被遮挡的阈值，默认0.7
     private float nose = 0.7f;
     // 嘴巴被遮挡的阈值，默认0.7

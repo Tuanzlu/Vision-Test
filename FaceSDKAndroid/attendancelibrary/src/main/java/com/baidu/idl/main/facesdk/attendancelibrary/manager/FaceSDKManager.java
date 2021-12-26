@@ -390,6 +390,7 @@ public class FaceSDKManager {
 //                LogUtils.e(TIME_TAG, "detect vis time = " + livenessModel.getRgbDetectDuration());
 
                 // 检测结果判断
+
                 if (faceInfos != null && faceInfos.length > 0) {
                     livenessModel.setTrackFaceInfo(faceInfos);
                     livenessModel.setFaceInfo(faceInfos[0]);
@@ -407,8 +408,8 @@ public class FaceSDKManager {
                     // 流程结束销毁图片，开始下一帧图片检测，否着内存泄露
                     rgbInstance.destory();
                     if (faceDetectCallBack != null) {
-                        faceDetectCallBack.onFaceDetectCallback(null);
-                        faceDetectCallBack.onFaceDetectDarwCallback(null);
+//                        faceDetectCallBack.onFaceDetectCallback(null);
+//                        faceDetectCallBack.onFaceDetectDarwCallback(null);
                         faceDetectCallBack.onTip(0, "未检测到人脸");
                     }
                 }
@@ -460,7 +461,6 @@ public class FaceSDKManager {
                 faceDetectCallBack.onTip(-1, "图片光照不通过");
                 return false;
             }
-
 
             // 遮挡结果过滤
             if (livenessModel.getFaceInfo().occlusion != null) {
@@ -547,6 +547,9 @@ public class FaceSDKManager {
                 // 重新赋予详细人脸信息
                 if (faceInfos != null && faceInfos.length > 0) {
                     livenessModel.setFaceInfo(faceInfos[0]);
+                    System.out.println("getFaceInfo:");
+                    System.out.println(livenessModel.getFaceInfo());
+
                     livenessModel.setTrackStatus(2);
                     livenessModel.setLandmarks(faceInfos[0].landmarks);
                 } else {

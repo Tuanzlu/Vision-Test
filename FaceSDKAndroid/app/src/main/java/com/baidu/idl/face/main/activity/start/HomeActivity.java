@@ -1,6 +1,7 @@
 package com.baidu.idl.face.main.activity.start;
 
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +10,7 @@ import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -19,46 +21,27 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baidu.idl.face.main.activity.BaseActivity;
-import com.baidu.idl.face.main.attribute.utils.AttributeConfigUtils;
-import com.baidu.idl.face.main.drivermonitor.utils.DriverMonitorConfigUtils;
-import com.baidu.idl.face.main.finance.utils.FinanceConfigUtils;
-import com.baidu.idl.face.main.test.SdTest;
 import com.baidu.idl.facesdkdemo.R;
-import com.baidu.idl.main.facesdk.activity.gate.FaceDepthGateActivity;
-import com.baidu.idl.main.facesdk.activity.gate.FaceNIRGateActivriy;
-import com.baidu.idl.main.facesdk.activity.gate.FaceRGBGateActivity;
-import com.baidu.idl.main.facesdk.activity.gate.FaceRgbNirDepthGataActivity;
 import com.baidu.idl.main.facesdk.attendancelibrary.attendance.FaceDepthAttendanceActivity;
 import com.baidu.idl.main.facesdk.attendancelibrary.attendance.FaceNIRAttendanceActivity;
 import com.baidu.idl.main.facesdk.attendancelibrary.attendance.FaceRGBAttendanceActivity;
 import com.baidu.idl.main.facesdk.attendancelibrary.attendance.FaceRGBNirDepthAttendanceActivity;
 import com.baidu.idl.main.facesdk.attendancelibrary.utils.AttendanceConfigUtils;
 import com.baidu.idl.main.facesdk.attendancelibrary.utils.RegisterConfigUtils;
-import com.baidu.idl.main.facesdk.gazelibrary.gaze.FaceGazeActivity;
 import com.baidu.idl.main.facesdk.gazelibrary.manager.FaceSDKManager;
-import com.baidu.idl.main.facesdk.gazelibrary.utils.GazeConfigUtils;
-import com.baidu.idl.main.facesdk.identifylibrary.testimony.FaceDepthTestimonyActivity;
-import com.baidu.idl.main.facesdk.identifylibrary.testimony.FaceIRTestimonyActivity;
-import com.baidu.idl.main.facesdk.identifylibrary.testimony.FaceRGBIRDepthTestimonyActivity;
-import com.baidu.idl.main.facesdk.identifylibrary.testimony.FaceRGBPersonActivity;
-import com.baidu.idl.main.facesdk.identifylibrary.utils.IdentifyConfigUtils;
 import com.baidu.idl.main.facesdk.model.SingleBaseConfig;
-import com.baidu.idl.main.facesdk.paymentlibrary.activity.payment.FaceDepthPaymentActivity;
-import com.baidu.idl.main.facesdk.paymentlibrary.activity.payment.FaceNIRPaymentActivity;
-import com.baidu.idl.main.facesdk.paymentlibrary.activity.payment.FaceRGBPaymentActivity;
-import com.baidu.idl.main.facesdk.paymentlibrary.activity.payment.FaceRgbNirDepthPaymentActivity;
-import com.baidu.idl.main.facesdk.paymentlibrary.utils.PaymentConfigUtils;
 import com.baidu.idl.main.facesdk.registerlibrary.user.activity.UserManagerActivity;
 import com.baidu.idl.main.facesdk.registerlibrary.user.register.FaceRegisterNewActivity;
 import com.baidu.idl.main.facesdk.registerlibrary.user.register.FaceRegisterNewDepthActivity;
 import com.baidu.idl.main.facesdk.registerlibrary.user.register.FaceRegisterNewNIRActivity;
 import com.baidu.idl.main.facesdk.registerlibrary.user.register.FaceRegisterNewRgbNirDepthActivity;
 import com.baidu.idl.main.facesdk.utils.DensityUtils;
-import com.baidu.idl.main.facesdk.utils.GateConfigUtils;
 import com.baidu.idl.main.facesdk.utils.StreamUtil;
 import com.baidu.idl.main.facesdk.view.PreviewTexture;
+
 
 
 public class HomeActivity extends BaseActivity implements View.OnClickListener {
@@ -91,10 +74,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
         mContext = this;
         initView();
-
         initRGBCheck();
         SharedPreferences sharedPreferences = this.getSharedPreferences("share", MODE_PRIVATE);
         boolean isFirstRun = sharedPreferences.getBoolean("isFirstRun", true);
@@ -191,13 +172,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
             System.out.println(mCamera.toString());
         } else {
-            System.out.println("setRgbCameraId 0");
             setRgbCameraId(0);
         }
     }
 
     private void setRgbCameraId(int index){
-        System.out.println("setCameraId: " + String.valueOf(index));
         SingleBaseConfig.getBaseConfig().setRBGCameraId(index);
         com.baidu.idl.main.facesdk.attendancelibrary.model.SingleBaseConfig.getBaseConfig().setRBGCameraId(index);
         com.baidu.idl.main.facesdk.registerlibrary.user.model.SingleBaseConfig.getBaseConfig().setRBGCameraId(index);
@@ -213,17 +192,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                         model.SingleBaseConfig.getBaseConfig().getRBGCameraId() == -1 ||
                 com.baidu.idl.main.facesdk.registerlibrary.user.model.
                         SingleBaseConfig.getBaseConfig().getRBGCameraId() == -1){
-
-
-            System.out.println("isSetCameraId : false");
-
             return false;
         }else {
-            System.out.println("isSetCameraId : true");
-            System.out.println("SingleBaseConfig:");
-            System.out.println(SingleBaseConfig.getBaseConfig().getRBGCameraId());
-            System.out.println("mCamera: ");
-            System.out.println(mCamera);
             return true;
         }
     }
@@ -421,4 +391,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                 break;
         }
     }
+
+
+
+
+
+
+
 }

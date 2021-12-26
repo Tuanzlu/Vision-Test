@@ -42,9 +42,9 @@ public class BaseConfig {
     // 三维旋转之左右旋转角[-90(左), 90(右)]，默认20
     private float yaw = 20;
     // 遮挡阈值
-    private float occlusion = 0.6f;
+    private float occlusion = 0.2f;
     // 左眼被遮挡的阈值，默认0.6
-    private float leftEye = 0.6f;
+    private float leftEye = 0.2f;
     // 右眼被遮挡的阈值，默认0.6
     private float rightEye = 0.6f;
     // 鼻子被遮挡的阈值，默认0.7

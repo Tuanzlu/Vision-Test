@@ -68,9 +68,11 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:28.0.0'
     //noinspection GradleCompatible
     implementation 'com.android.support:recyclerview-v7:28.0.0'
-    implementation 'com.google.code.gson:gson:2.6.2'
+//    implementation 'com.google.code.gson:gson:2.6.2'
     implementation 'me.jessyan:autosize:0.9.5'
-
+    configurations {
+        all*.exclude group: 'com.google.code.gson'
+    }
 //    compile files('libs/orbbec_module-debug.aar')
 //    compile files('libs/picozensesdk-release.aar')
 //    implementation files('libs/SocketClient.jar')

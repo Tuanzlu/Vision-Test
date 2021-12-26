@@ -31,8 +31,8 @@
         android:required="true" />
 
     <application
-        android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher"
+        android:requestLegacyExternalStorage="true"
         tools:ignore="GoogleAppIndexingWarning">
 
         <meta-data
@@ -54,8 +54,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <!-- 安全设备指纹接入 start -->
+        </activity> <!-- 安全设备指纹接入 start -->
         <activity
             android:name="com.baidu.liantian.LiantianActivity"
             android:excludeFromRecents="true"
@@ -87,9 +86,7 @@
         <provider
             android:name="com.baidu.liantian.LiantianProvider"
             android:authorities="com.baidu.idl.face.demo.liantian.ac.provider"
-            android:exported="false" />
-
-<!--        <service android:name="com.baidu.idl.face.main.socket.SocketService" />-->
+            android:exported="false" /> <!-- <service android:name="com.baidu.idl.face.main.socket.SocketService" /> -->
         <service
             android:name="com.baidu.liantian.LiantianService"
             android:exported="false">
@@ -106,7 +103,7 @@
             android:value="660346260f8a841a04ec2a56815b421b" />
         <meta-data
             android:name="appkey_avscan"
-            android:value="100034" /> <!-- 安全设备指纹接入 end -->
+            android:value="100034" />
     </application>
 
 </manifest>

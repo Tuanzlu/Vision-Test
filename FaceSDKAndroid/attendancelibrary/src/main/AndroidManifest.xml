@@ -30,28 +30,27 @@
         android:name="android.hardware.camera.front.autofocus"
         android:required="true" />
 
-
     <application>
-
-        <activity android:name=".attendance.FaceRGBAttendanceActivity"></activity>
-        <activity android:name=".attendance.FaceDepthAttendanceActivity"></activity>
-        <activity android:name=".attendance.FaceNIRAttendanceActivity"></activity>
-        <activity android:name=".attendance.FaceRGBNirDepthAttendanceActivity"></activity>
-        <activity android:name=".setting.CameraDisplayAngleActivity"></activity>
-        <activity android:name=".setting.AttendanceSettingActivity"></activity>
-        <activity android:name=".setting.AttendanceConfigQualtifyActivity"></activity>
-        <activity android:name=".setting.AttendanceLensSettingsActivity"></activity>
-        <activity android:name=".setting.AttendanceMinFaceActivity"></activity>
-        <activity android:name=".setting.MirrorSettingActivity"></activity>
-        <activity android:name=".setting.VersionMessageActivity"></activity>
-        <activity android:name=".setting.FaceLivinessTypeActivity"></activity>
-        <activity android:name=".setting.FaceDetectAngleActivity"></activity>
-        <activity android:name=".setting.AttendanceLensSelectionActivity"></activity>
-        <activity android:name=".setting.AttendanceFaceDetectActivity"></activity>
+        <activity
+            android:name=".attendance.ImageTestActivity"
+            android:exported="false" />
+        <activity android:name=".attendance.FaceRGBAttendanceActivity" />
+        <activity android:name=".attendance.FaceDepthAttendanceActivity" />
+        <activity android:name=".attendance.FaceNIRAttendanceActivity" />
+        <activity android:name=".attendance.FaceRGBNirDepthAttendanceActivity" />
+        <activity android:name=".setting.CameraDisplayAngleActivity" />
+        <activity android:name=".setting.AttendanceSettingActivity" />
+        <activity android:name=".setting.AttendanceConfigQualtifyActivity" />
+        <activity android:name=".setting.AttendanceLensSettingsActivity" />
+        <activity android:name=".setting.AttendanceMinFaceActivity" />
+        <activity android:name=".setting.MirrorSettingActivity" />
+        <activity android:name=".setting.VersionMessageActivity" />
+        <activity android:name=".setting.FaceLivinessTypeActivity" />
+        <activity android:name=".setting.FaceDetectAngleActivity" />
+        <activity android:name=".setting.AttendanceLensSelectionActivity" />
+        <activity android:name=".setting.AttendanceFaceDetectActivity" />
         <activity android:name=".setting.AttendanceLogSettingActivity" />
         <activity android:name=".setting.AttendancePictureOptimizationActivity" />
-
-
     </application>
 
 </manifest>

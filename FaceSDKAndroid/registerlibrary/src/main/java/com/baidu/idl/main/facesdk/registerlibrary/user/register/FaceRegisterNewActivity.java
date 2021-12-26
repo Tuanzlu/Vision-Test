@@ -43,6 +43,8 @@ import com.baidu.idl.main.facesdk.registerlibrary.user.view.FaceRoundProView;
 
 import java.io.File;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -179,8 +181,8 @@ public class FaceRegisterNewActivity extends BaseActivity implements View.OnClic
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         // 摄像头图像预览
         startCameraPreview();
         Log.e(TAG, "start camera");
@@ -224,7 +226,9 @@ public class FaceRegisterNewActivity extends BaseActivity implements View.OnClic
                             return;
                         }
                         // 摄像头数据处理
-                        faceDetect(data, width, height);
+
+                                faceDetect(data, width, height);
+
                     }
                 });
     }
@@ -247,33 +251,57 @@ public class FaceRegisterNewActivity extends BaseActivity implements View.OnClic
             FaceTrackManager.getInstance().setAliving(true);
         }
 
-        // 摄像头预览数据进行人脸检测
-        FaceTrackManager.getInstance().faceTrack(data, width, height, new FaceDetectCallBack() {
-            @Override
-            public void onFaceDetectCallback(LivenessModel livenessModel) {
-                checkFaceBound(livenessModel);
-            }
+        timer1(data,width,height);
 
+
+
+        // 摄像头预览数据进行人脸检测
+
+    }
+
+    private void timer1(final byte[] data, final int width, final int height) {
+        if (mFaceRoundProView == null) {
+            return;
+        }
+//        mFaceRoundProView.setTipText("保持面部在取景框内");
+//        mFaceRoundProView.setBitmapSource(R.mipmap.ic_loading_red);
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
             @Override
-            public void onTip(int code, final String msg) {
-                runOnUiThread(new Runnable() {
+            public void run() {
+                FaceTrackManager.getInstance().faceTrack(data, width, height, new FaceDetectCallBack() {
                     @Override
-                    public void run() {
-                        if (mFaceRoundProView == null) {
-                            return;
-                        }
-                        mFaceRoundProView.setTipText("保持面部在取景框内");
-                        mFaceRoundProView.setBitmapSource(R.mipmap.ic_loading_red);
+                    public void onFaceDetectCallback(LivenessModel livenessModel) {
+                        System.out.println("start check face bound");
+                        checkFaceBound(livenessModel);
+                    }
+
+                    @Override
+                    public void onTip(int code, final String msg) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (mFaceRoundProView == null) {
+                                    return;
+                                }
+                                mFaceRoundProView.setTipText("保持面部在取景框内");
+                                mFaceRoundProView.setBitmapSource(R.mipmap.ic_loading_red);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFaceDetectDarwCallback(LivenessModel livenessModel) {
+
                     }
                 });
+                System.out.println("延迟3s再进行识别");
+                this.cancel();
             }
-
-            @Override
-            public void onFaceDetectDarwCallback(LivenessModel livenessModel) {
-
-            }
-        });
+        }, 3000);
     }
+
+
 
     /**
      * 检查人脸边界
@@ -353,6 +381,7 @@ public class FaceRegisterNewActivity extends BaseActivity implements View.OnClic
                 mFaceRoundProView.setTipText("请保持面部在取景框内");
                 mFaceRoundProView.setBitmapSource(R.mipmap.ic_loading_blue);
                 // 检验活体分值
+                System.out.println("start livenessmodel detect");
                 checkLiveScore(livenessModel);
             }
         });
@@ -387,6 +416,7 @@ public class FaceRegisterNewActivity extends BaseActivity implements View.OnClic
                 return;
             }
             // 提取特征值
+            System.out.println("start get features");
             getFeatures(livenessModel);
         }
     }
@@ -415,6 +445,7 @@ public class FaceRegisterNewActivity extends BaseActivity implements View.OnClic
                                     if (mCollectSuccess) {
                                         return;
                                     }
+                                    System.out.println("start display compare");
                                     displayCompareResult(featureSize, feature, model);
                                     Log.e(TAG, String.valueOf(feature.length));
                                 }
@@ -435,6 +466,8 @@ public class FaceRegisterNewActivity extends BaseActivity implements View.OnClic
 
         // 特征提取成功
         if (ret == 128) {
+            System.out.println("get features succeeded");
+
             // 抠图
             BDFaceImageInstance imageInstance = model.getBdFaceImageInstanceCrop();
             AtomicInteger isOutoBoundary = new AtomicInteger();
