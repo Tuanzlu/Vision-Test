@@ -424,7 +424,7 @@ public class FaceRGBAttendanceActivity extends BaseActivity implements View.OnCl
                 if (image != null) {
                     mFaceDetectImageView.setImageBitmap(BitmapUtils.getInstaceBmp(image));
                     result = bitmapToBase64(BitmapUtils.getInstaceBmp(image));
-                    System.out.println("result from base64:" + result);
+                    System.out.println("base64 result:" + result);
                     image.destory();
                 }
                 if (mLiveType == 0) {
@@ -442,8 +442,6 @@ public class FaceRGBAttendanceActivity extends BaseActivity implements View.OnCl
                             layoutCompareStatus.setVisibility(View.VISIBLE);
                             textCompareStatus.setTextColor(Color.parseColor("#00BAF2"));
                             textCompareStatus.setText("识别通过");
-                            System.out.println("识别通过了 哦耶 there");
-
                         }
                     }
 
@@ -480,15 +478,11 @@ public class FaceRGBAttendanceActivity extends BaseActivity implements View.OnCl
                                 layoutCompareStatus.setVisibility(View.VISIBLE);
                                 textCompareStatus.setTextColor(Color.parseColor("#00BAF2"));
                                 textCompareStatus.setText("识别通过");
-                                System.out.println("识别通过了 哦耶 here");
-                                System.out.print("base64 result: " + result);
-                                System.out.println("ready to start imageTest");
                                 Intent imgIntent = new Intent(mContext, ImageTestActivity.class);
                                 imgIntent.putExtra("result", result);
                                 imgIntent.putExtra("access_token", access_token);
                                 startActivity(imgIntent);
                                 flag = 1;
-                                System.out.println("test whether startactivity succeeded");
                                 finish();
                             }
                         }
@@ -598,19 +592,18 @@ public class FaceRGBAttendanceActivity extends BaseActivity implements View.OnCl
     }
 
     public static void getAccessToken() {
-        System.out.println("here start getAccessToken");
         String ak = "Mu8HELp2MU7cnXW4MwHE1Ulq";
         String sk = "nM5ZQfqRaBNo82RzbcZXprHK3Pjhik2l";
         // 获取token地址
         String authHost = "https://aip.baidubce.com/oauth/2.0/token?";
         final String getAccessTokenUrl = authHost
+                + "client_secret=" + sk
                 // 1. grant_type为固定参数
-                + "grant_type=client_credentials"
+                + "&grant_type=client_credentials"
                 // 2. 官网获取的 API Key
-                + "&client_id=" + ak
+                + "&client_id=" + ak;
                 // 3. 官网获取的 Secret Key
-                + "&client_secret=" + sk;
-        System.out.println("here start a new thread");
+
 
         new Thread(new Runnable(){
             @Override
@@ -637,7 +630,7 @@ public class FaceRGBAttendanceActivity extends BaseActivity implements View.OnCl
                 /**
                  * 返回结果示例
                  */
-                System.err.println("result:" + result);
+                System.err.println("get access_token result:" + result);
                 JSONObject jsonObject = new JSONObject(result);
                 access_token = jsonObject.getString("access_token");
                 System.out.println("access_token:" + access_token);
@@ -649,52 +642,6 @@ public class FaceRGBAttendanceActivity extends BaseActivity implements View.OnCl
             }
         }).start();
     }
-
-//    public static void getLandMarks(String imgStr) {
-//        System.out.println("here start getLandMarks");
-//        // 获取token地址
-//        String authHost = "https://aip.baidubce.com/rest/2.0/face/v3/detect";
-//
-//        System.out.println("here start a new thread");
-//
-//        new Thread(new Runnable(){
-//            @Override
-//            public void run() {
-//                try {
-//                    URL realUrl = new URL(getAccessTokenUrl);
-//                    // 打开和URL之间的连接
-//                    HttpURLConnection connection = (HttpURLConnection) realUrl.openConnection();
-//                    connection.setRequestMethod("POST");
-//                    connection.connect();
-//                    // 获取所有响应头字段
-//                    Map<String, List<String>> map = connection.getHeaderFields();
-//                    // 遍历所有的响应头字段
-//                    for (String key : map.keySet()) {
-//                        System.err.println(key + "--->" + map.get(key));
-//                    }
-//                    // 定义 BufferedReader输入流来读取URL的响应
-//                    BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-//                    String result = "";
-//                    String line;
-//                    while ((line = in.readLine()) != null) {
-//                        result += line;
-//                    }
-//                    /**
-//                     * 返回结果示例
-//                     */
-//                    System.err.println("result:" + result);
-//                    JSONObject jsonObject = new JSONObject(result);
-//                    access_token = jsonObject.getString("access_token");
-//                    System.out.println("access_token:" + access_token);
-//                } catch (Exception e) {
-//                    System.err.printf("获取token失败！");
-//                    e.printStackTrace(System.err);
-//                }
-//
-//            }
-//        }).start();
-//    }
-
 
 
     @Override

@@ -43,13 +43,10 @@ public class ImageTestActivity extends Activity implements View.OnClickListener 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        System.out.println("start to saveInstanceState");
         super.onCreate(savedInstanceState);
         mContext = this;
         setContentView(R.layout.activity_image_test);
-        System.out.println("start to init view");
         initView();
-        System.out.println("init view end here");
 
 
     }
@@ -61,24 +58,20 @@ public class ImageTestActivity extends Activity implements View.OnClickListener 
         mButReturn.setOnClickListener(this);
 
 
-        System.out.println("init view here");
         Bundle extraData = getIntent().getExtras();
 
         String imgStr = extraData.getString("result");
         System.out.println("imgStr in imageTest is: "+ imgStr);
 
         Bitmap bitmap = base64ToBitmap(imgStr);
-        System.out.println("begin to draw");
         Bitmap icon = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
         canvas = new Canvas(icon);
-        System.out.println("end to draw");
         access_token = extraData.getString("access_token");
         paint = new Paint(); //设置一个笔刷大小是3的黄色的画笔
         paint.setColor(Color.YELLOW);
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setStrokeCap(Paint.Cap.ROUND);
         paint.setStrokeWidth(3);
-        System.out.println("begin to getLandMarks");
         getLandMarks(imgStr, bitmap, icon);
     }
 
@@ -108,14 +101,13 @@ public class ImageTestActivity extends Activity implements View.OnClickListener 
                     System.out.println("param:");
                     System.out.println(param);
                     // 注意这里仅为了简化编码每一次请求都去获取access_token，线上环境access_token有过期时间， 客户端可自行缓存，过期后重新获取。
-
                     String result = HttpUtil.post(url, access_token, "application/json", param);
 
                     JSONObject jsonObject = new JSONObject(result);
                     JSONObject response = jsonObject.getJSONObject("result");
                     JSONArray face_list = response.getJSONArray("face_list");
                     JSONObject landmarks = face_list.getJSONObject(0).getJSONObject("landmark150");
-                    System.out.println("landmarks ahhh:" );
+                    System.out.println("landmarks of the face:" );
                     System.out.println(landmarks);
 
                     MarkFace(landmarks);
@@ -126,11 +118,10 @@ public class ImageTestActivity extends Activity implements View.OnClickListener 
                                           testImage = findViewById(R.id.test_image);
                                           testImage.setVisibility(ImageView.VISIBLE);
                                           testImage.setImageBitmap(compoundBitmap(bitmap, icon));
-                                          System.out.println("finish all the need");
                                       }
                                   });
 
-                    System.out.println("post result here:");
+                    System.out.println("post result:");
                     System.out.println(result);
                 } catch (Exception e) {
                     System.err.printf("获取token失败！");
@@ -175,6 +166,7 @@ public class ImageTestActivity extends Activity implements View.OnClickListener 
 
 
     public static String MarkFace(JSONObject landmark150) throws JSONException {
+
         Map<String, Integer> groupMap = group(landmark150);
         Set<String> groupSetArray = groupMap.keySet();
         for (String key : groupSetArray) {
@@ -216,7 +208,7 @@ public class ImageTestActivity extends Activity implements View.OnClickListener 
 
     /**
      * @func 人脸器官分组
-     * @author zxt
+     * @author lqy
      * @param landmark150
      * @return Map<String,Integer> : key = 位置名，value = 连接个数
      */

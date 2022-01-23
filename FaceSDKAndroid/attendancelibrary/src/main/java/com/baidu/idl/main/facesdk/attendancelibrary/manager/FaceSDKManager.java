@@ -547,9 +547,6 @@ public class FaceSDKManager {
                 // 重新赋予详细人脸信息
                 if (faceInfos != null && faceInfos.length > 0) {
                     livenessModel.setFaceInfo(faceInfos[0]);
-                    System.out.println("getFaceInfo:");
-                    System.out.println(livenessModel.getFaceInfo());
-
                     livenessModel.setTrackStatus(2);
                     livenessModel.setLandmarks(faceInfos[0].landmarks);
                 } else {
